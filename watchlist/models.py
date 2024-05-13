@@ -9,6 +9,8 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(20))
     username = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
+    mail = db.Column(db.String(120))
+    role = db.Column(db.Integer)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -21,3 +23,19 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     year = db.Column(db.String(4))
+
+class TOEFL_IBT(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    reading = db.Column(db.Text())
+    listening = db.Column(db.Text())
+    speaking = db.Column(db.Text())
+    writing = db.Column(db.Text())
+
+class TPO(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    reading = db.Column(db.Text())
+    listening = db.Column(db.Text())
+    speaking = db.Column(db.Text())
+    writing = db.Column(db.Text())

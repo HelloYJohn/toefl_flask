@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>TOEFL IBT {{ toeflibt.id }}</h3>
+{% if current_user.is_authenticated %}
+    <label>READING</label>
+    <textarea rows="50" cols="80">
+        {{ toeflibt.reading }}
+    </textarea>
+    <label>LISTENING</label>
+    <textarea rows="50" cols="80">
+        {{ toeflibt.listening }}
+    </textarea>
+    <label>SPEAKING</label>
+    <textarea rows="50" cols="80">
+        {{ toeflibt.speaking }}
+    </textarea>
+    <label>WRITING</label>
+    <textarea rows="50" cols="80">
+        {{ toeflibt.writing }}
+    </textarea>
+{% endif %}
+{% endblock %}

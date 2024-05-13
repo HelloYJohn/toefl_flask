@@ -1,8 +1,9 @@
+import click
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from watchlist import app, db
-from watchlist.models import User, Movie
+from watchlist.models import User, Movie, TOEFL_IBT, TPO
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -89,18 +90,44 @@ def login():
             flash('Invalid input.')
             return redirect(url_for('login'))
 
-        user = User.query.first()
-
-        if username == user.username and user.validate_password(password):
-            login_user(user)
-            flash('Login success.')
-            return redirect(url_for('index'))
+        users = db.session.query(User).filter(User.username == username).all()
+        if len(users) != 0:
+            for user in users:
+                if username == user.username and user.validate_password(password):
+                    login_user(user)
+                    flash('Login success.')
+                return redirect(url_for('index'))
 
         flash('Invalid username or password.')
         return redirect(url_for('login'))
 
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        mail = request.form['mail']
+        password = request.form['password']
+
+        if not username or not password or not mail:
+            flash('Invalid input.')
+            return redirect(url_for('register'))
+
+        db.create_all()
+        user = db.session.query(User).filter(User.username == username).all()
+        if len(user) != 0:
+            flash('username exists, please choose another one.')
+            return redirect(url_for('register'))
+        else:
+            user = User(username=username, name=username, mail=mail, role=0)
+            user.set_password(password)
+            db.session.add(user)
+
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 @app.route('/logout')
 @login_required
@@ -108,3 +135,25 @@ def logout():
     logout_user()
     flash('Goodbye.')
     return redirect(url_for('index'))
+
+@app.route('/toefl', methods=['GET', 'POST'])
+def toefl():
+    toefl_ibts = TOEFL_IBT.query.all()
+    return render_template('toefl_list.html', toefl_ibts=toefl_ibts)
+
+@app.route('/toefl/paper/<int:toefl_id>', methods=['GET', 'POST'])
+@login_required
+def toelf_ibt_paper(toefl_id):
+    toeflibt = TOEFL_IBT.query.get_or_404(toefl_id)
+    return render_template('toefl_paper.html', toeflibt=toeflibt)
+
+@app.route('/tpo', methods=['GET', 'POST'])
+def tpo():
+    tpos = TPO.query.all()
+    return render_template('tpo_list.html', tpos=tpos)
+
+@app.route('/tpo/paper/<int:tpo_id>')
+@login_required
+def tpo_paper(tpo_id):
+    tpo = TPO.query.get_or_404(tpo_id)
+    return render_template('tpo_paper.html', tpo=tpo)

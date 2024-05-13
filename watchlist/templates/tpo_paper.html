@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>TPO {{ tpo.id }}</h3>
+{% if current_user.is_authenticated %}
+    <label>READING</label>
+    <textarea rows="50" cols="80">
+        {{ tpo.reading }}
+    </textarea>
+    <label>LISTENING</label>
+    <textarea rows="50" cols="80">
+        {{ tpo.listening }}
+    </textarea>
+    <label>SPEAKING</label>
+    <textarea rows="50" cols="80">
+        {{ tpo.speaking }}
+    </textarea>
+    <label>WRITING</label>
+    <textarea rows="50" cols="80">
+        {{ tpo.writing }}
+    </textarea>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{ toefl_ibts|length }} Titles</p>
+<ul class="movie-list">
+    {% for tpo in tpos %}
+    <li>
+        {{ tpo.name }}
+        <span class="float-right">
+            {% if current_user.is_authenticated %}
+            <a class="btn" href="{{ url_for('tpo_paper', tpo_id=tpo.id) }}">Detail</a>
+            {% endif %}
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
+{% endblock %}
